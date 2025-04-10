@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="img/image.png" type="image/png">
+    <title>Blog - Online Shopping Website</title>
+    <meta name="description" content="Read the latest news and updates from our store">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link rel="stylesheet" href="shop.css">
+</head>
+
+<body>
+    <section id="header">
+        <a href="#"><img src="img/logo.png" class="logo" alt="Brand Logo"></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="order-history.html">Order History</a></li>
+                <li><a class="active" href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag"><a href="cart.html"><i class="fa fa-shopping-bag"></i></a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+                <li><a href="login.html" id="login-icon"><i class="far fa-user"></i></a></li>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="fa fa-shopping-bag"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <section id="page-header" class="blog-header">
+        <h2>Our Blog</h2>
+        <p>Stay updated with the latest trends and news</p>
+    </section>
+
+    <section id="blog" class="section-p1">
+        <div class="blog-container" id="blog-container">
+            <!-- Blog posts will be loaded dynamically via JavaScript -->
+        </div>
+    </section>
+
+    <section id="newsletter" class="section-p1 section-m1">
+        <div class="newstext">
+            <h4>Sign Up For Newsletters</h4>
+            <p>Get E-mail updates about our latest shop and <span>special offers.</span></p>
+        </div>
+        <div class="form">
+            <input type="text" placeholder="Your email address">
+            <button class="normal">Sign Up</button>
+        </div>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="img/logo.png" alt="Brand Logo">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> PUNE</p>
+            <p><strong>Phone:</strong> +91 9579157355</p>
+            <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About Us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="img/pay/app.jpg" alt="App Store">
+                <img src="img/pay/play.jpg" alt="Google Play">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="img/pay/pay.png" alt="Payment Methods">
+        </div>
+
+        <div class="copyright">
+            <p>© 2025, E-Commerce Website - All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Environment configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000' 
+            : 'https://your-production-api.com'; // Replace with your production API URL
+
+        // DOM Elements
+        const blogContainer = document.getElementById('blog-container');
+
+        // Load blog posts from backend
+        async function loadBlogs() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/blogs`);
+                const blogs = await response.json();
+
+                if (!blogs || blogs.length === 0) {
+                    blogContainer.innerHTML = `
+                        <p style="text-align: center; padding: 30px;">No blog posts available yet.</p>
+                    `;
+                    return;
+                }
+
+                let blogHtml = '';
+                blogs.forEach(blog => {
+                    const blogDate = new Date(blog.date).toLocaleDateString();
+                    blogHtml += `
+                        <div class="blog-post">
+                            <img src="${API_BASE_URL}/${blog.image}" alt="${blog.title}">
+                            <div class="blog-content">
+                                <h4>${blog.title}</h4>
+                                <p>${blog.description}</p>
+                                <span>${blogDate}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                blogContainer.innerHTML = blogHtml;
+            } catch (err) {
+                console.error('Error loading blogs:', err);
+                blogContainer.innerHTML = '<p style="text-align: center;">Error loading blog posts</p>';
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBlogs();
+
+            // Mobile menu toggle
+            document.getElementById('bar').addEventListener('click', () => {
+                document.getElementById('navbar').classList.add('active');
+            });
+            document.getElementById('close').addEventListener('click', () => {
+                document.getElementById('navbar').classList.remove('active');
+            });
+        });
+    </script>
+
+    <style>
+        /* Inline styles for blog section (move to shop.css if preferred) */
+        .blog-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-around;
+        }
+        .blog-post {
+            width: 30%;
+            min-width: 250px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .blog-post img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .blog-content {
+            padding: 15px;
+        }
+        .blog-content h4 {
+            margin: 0 0 10px;
+            color: #088178;
+        }
+        .blog-content p {
+            text-align: justify;
+            font-size: 14px;
+            margin: 0 0 10px;
+        }
+        .blog-content a {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        .blog-content span {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>₹
+</body>
+
+</html>

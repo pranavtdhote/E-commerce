@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="img/image.png" type="image/png">
+    <title>Product Details - Online Shopping Website</title>
+    <meta name="description" content="View product details and add to cart">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link rel="stylesheet" href="shop.css"> 
+</head>
+
+<body>
+    <section id="header">
+        <a href="#"><img src="img/logo.png" class="logo" alt="Brand Logo"></a>
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="order-history.html">Order History</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="lg-bag"><a href="cart.html"><i class="fa fa-shopping-bag"></i></a></li>
+                <a href="#" id="close"><i class="far fa-times"></i></a>
+                <li><a href="login.html" id="login-icon"><i class="far fa-user"></i></a></li>
+            </ul>
+        </div>
+        <div id="mobile">
+            <a href="cart.html"><i class="fa fa-shopping-bag"></i></a>
+            <i id="bar" class="fas fa-outdent"></i>
+        </div>
+    </section>
+
+    <section id="page-header" class="product-header">
+        <h2>Product Details</h2>
+        <p>Explore this item and add it to your cart</p>
+    </section>
+
+    <section id="product-details" class="section-p1">
+        <div class="single-pro-image">
+            <img id="product-image" src="" alt="Product Image" width="100%">
+        </div>
+        <div class="single-pro-details">
+            <h6 id="product-brand"></h6>
+            <h4 id="product-name"></h4>
+            <h2 id="product-price"></h2>
+            <div class="star">
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+                <i class="fas fa-star"></i>
+            </div>
+            <p id="product-description">A high-quality product from a trusted brand. Perfect for your everyday needs.</p>
+            <input type="number" id="quantity" value="1" min="1">
+            <button class="normal" id="add-to-cart-btn">Add to Cart</button>
+            <h4>Product Details</h4>
+            <span>Category: <span id="product-category"></span></span>
+        </div>
+    </section>
+
+    <section id="newsletter" class="section-p1 section-m1">
+        <div class="newstext">
+            <h4>Sign Up For Newsletters</h4>
+            <p>Get E-mail updates about our latest shop and <span>special offers.</span></p>
+        </div>
+        <div class="form">
+            <input type="text" placeholder="Your email address">
+            <button class="normal">Sign Up</button>
+        </div>
+    </section>
+
+    <footer class="section-p1">
+        <div class="col">
+            <img class="logo" src="img/logo.png" alt="Brand Logo">
+            <h4>Contact</h4>
+            <p><strong>Address:</strong> PUNE</p>
+            <p><strong>Phone:</strong> +91 9579157355</p>
+            <p><strong>Hours:</strong> 10:00 - 18:00, Mon - Sat</p>
+            <div class="follow">
+                <h4>Follow Us</h4>
+                <div class="icon">
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-pinterest-p"></i>
+                    <i class="fab fa-youtube"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <h4>About</h4>
+            <a href="#">About Us</a>
+            <a href="#">Delivery Information</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms & Conditions</a>
+            <a href="#">Contact Us</a>
+        </div>
+
+        <div class="col">
+            <h4>My Account</h4>
+            <a href="#">Sign In</a>
+            <a href="#">View Cart</a>
+            <a href="#">My Wishlist</a>
+            <a href="#">Track My Order</a>
+            <a href="#">Help</a>
+        </div>
+
+        <div class="col install">
+            <h4>Install App</h4>
+            <p>From App Store or Google Play</p>
+            <div class="row">
+                <img src="img/pay/app.jpg" alt="App Store">
+                <img src="img/pay/play.jpg" alt="Google Play">
+            </div>
+            <p>Secured Payment Gateways</p>
+            <img src="img/pay/pay.png" alt="Payment Methods">
+        </div>
+
+        <div class="copyright">
+            <p>© 2025, E-Commerce Website - All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <script>
+        // Environment configuration
+        const API_BASE_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:5000' 
+            : 'https://your-production-api.com'; 
+
+        // User ID (for demo; in production, get this from authentication)
+        const userId = 'user123'; 
+
+        // DOM Elements
+        const productImage = document.getElementById('product-image');
+        const productBrand = document.getElementById('product-brand');
+        const productName = document.getElementById('product-name');
+        const productPrice = document.getElementById('product-price');
+        const productDescription = document.getElementById('product-description');
+        const productCategory = document.getElementById('product-category');
+        const quantityInput = document.getElementById('quantity');
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+
+        // Get product ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');
+
+        // Load product details from backend
+        async function loadProduct() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/products/${productId}`);
+                if (!response.ok) {
+                    throw new Error('Product not found');
+                }
+                const product = await response.json();
+
+                productImage.src = product.image;
+                productBrand.textContent = product.brand;
+                productName.textContent = product.name;
+                productPrice.textContent = `$${product.price}`;
+                productDescription.textContent = product.description || 'A high-quality product from a trusted brand.';
+                productCategory.textContent = product.category;
+            } catch (err) {
+                console.error('Error loading product:', err);
+                productName.textContent = 'Product Not Found';
+                addToCartBtn.disabled = true;
+            }
+        }
+
+        // Add product to cart
+        async function addToCart(productId, name, price, image, quantity) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/cart/${userId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ productId, name, price, image, quantity }),
+                });
+                if (response.ok) {
+                    alert(`${name} added to cart!`);
+                } else {
+                    console.error('Failed to add to cart:', await response.text());
+                }
+            } catch (err) {
+                console.error('Error adding to cart:', err);
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProduct();
+
+            addToCartBtn.addEventListener('click', async function() {
+                const quantity = parseInt(quantityInput.value);
+                if (quantity < 1) {
+                    alert('Please select a valid quantity');
+                    return;
+                }
+
+                const product = {
+                    productId: productId,
+                    name: productName.textContent,
+                    price: parseFloat(productPrice.textContent.replace('$', '')),
+                    image: productImage.src,
+                    quantity: quantity
+                };
+
+                await addToCart(product.productId, product.name, product.price, product.image, product.quantity);
+            });
+
+            // Mobile menu toggle
+            document.getElementById('bar').addEventListener('click', () => {
+                document.getElementById('navbar').classList.add('active');
+            });
+            document.getElementById('close').addEventListener('click', () => {
+                document.getElementById('navbar').classList.remove('active');
+            });
+        });
+    </script>
+</body>
+
+</html>
